@@ -47,20 +47,6 @@ function createButton(buttonTypeClass, eventListener) {
 	const button = document.createElement("button");
 	button.classList.add(buttonTypeClass);
 
-	switch (buttonTypeClass) {
-		case "check-button":
-			button.innerHTML = "Selesai";
-			break;
-		case "edit-button":
-			button.innerHTML = "Ubah";
-			break;
-		case "trash-button":
-			button.innerHTML = "Hapus";
-			break;
-		case "undo-button":
-			button.innerHTML = "Belum Selesai";
-			break;
-	}
 	button.addEventListener("click", function(event) {
 		eventListener(event);
 		event.stopPropagation();
@@ -156,6 +142,10 @@ function searchBookInBookshelf() {
 	const finishedList = finishedBookList.getElementsByClassName("book_item");
 	const unfinishedList = unfinishedBookList.getElementsByClassName("book_item");
 
+	const result = books.filer(book => book.name.toUpperCase().includes(inputTitle.toUpperCase()));
+
+	console.log(result);
+
 	for (book of books) {
 		if (book.title.toUpperCase().indexOf(search) > -1) {
 			if (book.isCompleted) {
@@ -179,7 +169,7 @@ function addBookToFinished(bookElement) {
 	const bookAuthor = bookElement.parentElement.querySelector(".inner > .author").innerText;
 	const bookYear = bookElement.parentElement.querySelector(".inner > .year").innerText;
 
-	const newBook = makeBook(bookTitle, bookAuthor, bookYear, true);
+	const newBook = makeBook(bookTitle, bookAuthor.slice(10), bookYear.slice(7), true);
 
 	const book = findBook(bookElement.parentElement[BOOK_ITEMID]);
 	book.isCompleted = true;
@@ -220,7 +210,7 @@ function undoBookFromFinished(bookElement) {
 	const bookAuthor = bookElement.parentElement.querySelector(".inner > .author").innerText;
 	const bookYear = bookElement.parentElement.querySelector(".inner > .year").innerText;
 
-	const newBook = makeBook(bookTitle, bookAuthor, bookYear, false);
+	const newBook = makeBook(bookTitle, bookAuthor.slice(10), bookYear.slice(7), false);
 
 	const book = findBook(bookElement.parentElement[BOOK_ITEMID]);
 	book.isCompleted = false;
