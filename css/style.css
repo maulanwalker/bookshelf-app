@@ -247,34 +247,5 @@ p {
   font-weight: bold;
   border-radius: 5px;
   background-size: contain;
-}
-
-.check-button {
-  background: url("../assets/check-circle-regular.svg");
-}
-
-.check-button:hover {
-  background: url("../assets/check-circle-solid.svg");
-}
-
-.undo-button {
-  background: url("../assets/undo-alt-solid.svg");
-}
-
-.edit-button {
-  background: url("../assets/edit-regular.svg");
-  height: 44px !important;
-}
-
-.edit-button:hover {
-  background: url("../assets/edit-solid.svg");
-}
-
-.trash-button {
-  background: url("../assets/trash-alt-regular.svg");
-  width: 44px !important;
-}
-
-.trash-button:hover {
-  background: url("../assets/trash-alt-solid.svg");
+  background-color: #30475e;
 }
