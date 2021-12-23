@@ -28,9 +28,9 @@ document.addEventListener("ondataloaded", () => {
 });
 
 const checkbox = document.querySelector("input[id=inputBookIsComplete]");
-const addBookButton = document.getElementById("addBookButton");
 const cancelAdd = document.getElementById("cancelAddBook");
 const cancelEdit = document.getElementById("cancelEditBook");
+const addBookButton = document.getElementById("addBookButton");
 
 checkbox.addEventListener("change", function(){
 	let choice = document.getElementById("choice");

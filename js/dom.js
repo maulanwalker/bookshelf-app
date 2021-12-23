@@ -47,6 +47,25 @@ function createButton(buttonTypeClass, eventListener) {
 	const button = document.createElement("button");
 	button.classList.add(buttonTypeClass);
 
+	const icon = document.createElement("i");
+	let iconClass;
+	switch (buttonTypeClass) {
+		case "check-button" :
+			iconClass = "fa-check-circle-o";
+			break;
+		case "undo-button" :
+			iconClass = "fa-undo";
+			break;
+		case "edit-button" :
+			iconClass = "fa-edit";
+			break;
+		case "trash-button" :
+			iconClass = "fa-trash-o";
+			break;
+	}
+	icon.classList.add("fa", iconClass);
+	button.append(icon);
+
 	button.addEventListener("click", function(event) {
 		eventListener(event);
 		event.stopPropagation();
@@ -56,25 +75,25 @@ function createButton(buttonTypeClass, eventListener) {
 
 function createCheckButton() {
 	return createButton("check-button", function(event) {
-		addBookToFinished(event.target.parentElement);
+		addBookToFinished(event.target.parentElement.parentElement);
 	});
 }
 
 function createEditButton() {
 	return createButton("edit-button", function(event) {
-		editBookFromBookshelf(event.target.parentElement);
+		editBookFromBookshelf(event.target.parentElement.parentElement);
 	});
 }
 
 function createTrashButton() {
 	return createButton("trash-button", function(event) {
-		removeBookFromBookshelf(event.target.parentElement);
+		removeBookFromBookshelf(event.target.parentElement.parentElement);
 	});
 }
 
 function createUndoButton() {
 	return createButton("undo-button", function(event) {
-		undoBookFromFinished(event.target.parentElement);
+		undoBookFromFinished(event.target.parentElement.parentElement);
 	});
 }
 
@@ -142,28 +161,16 @@ function searchBookInBookshelf() {
 	const finishedList = finishedBookList.getElementsByClassName("book_item");
 	const unfinishedList = unfinishedBookList.getElementsByClassName("book_item");
 
-	const result = books.filer(book => book.name.toUpperCase().includes(inputTitle.toUpperCase()));
-
-	console.log(result);
-
 	for (book of books) {
-		if (book.title.toUpperCase().indexOf(search) > -1) {
-			if (book.isCompleted) {
-				finishedList[finished++].style.display = "";
-			} else {
-				unfinishedList[unfinished++].style.display = "";
-			}
-		} else {
-			if (book.isCompleted) {
-				finishedList[finished++].style.display = "none";
-			} else {
-				unfinishedList[unfinished++].style.display = "none";
-			}
-		}
+		book.title.toUpperCase().indexOf(search) > -1 ?
+			(book.isCompleted ? finishedList[finished++].style.display = "" : unfinishedList[unfinished++].style.display = "") :
+			(book.isCompleted ? finishedList[finished++].style.display = "none" : unfinishedList[unfinished++].style.display = "none");
 	}
 }
 
 function addBookToFinished(bookElement) {
+	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+
 	const finishedBookList = document.getElementById(FINISHED_BOOK_LIST);
 	const bookTitle = bookElement.parentElement.querySelector(".inner > h3").innerText;
 	const bookAuthor = bookElement.parentElement.querySelector(".inner > .author").innerText;
@@ -182,6 +189,8 @@ function addBookToFinished(bookElement) {
 }
 
 function editBookFromBookshelf(bookElement) {
+	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+
 	const bookPosition = findBookIndex(bookElement.parentElement[BOOK_ITEMID]);
 	tempId = bookElement.parentElement[BOOK_ITEMID];
 	tempPosition = bookPosition;
@@ -198,6 +207,8 @@ function editBookFromBookshelf(bookElement) {
 }
 
 function removeBookFromBookshelf(bookElement) {
+	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+
 	const bookPosition = findBookIndex(bookElement.parentElement[BOOK_ITEMID]);
 	books.splice(bookPosition, 1);
 	bookElement.parentElement.remove();
@@ -205,6 +216,8 @@ function removeBookFromBookshelf(bookElement) {
 }
 
 function undoBookFromFinished(bookElement) {
+	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+
 	const unfinishedBookList = document.getElementById(UNFINISHED_BOOK_LIST);
 	const bookTitle = bookElement.parentElement.querySelector(".inner > h3").innerText;
 	const bookAuthor = bookElement.parentElement.querySelector(".inner > .author").innerText;
