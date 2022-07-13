@@ -1,97 +1,110 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Bookshelf Apps</title>
-	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></head>
-<body>
-	<header class="head_bar">
-		<h1 class="head_bar_title">Bookshelf Apps</h1>
-	</header>
-	<main>
-		<div class="add_book">
-			<section class="input_section">
-				<h2>Masukkan Buku Baru</h2>
-				<form id="inputBook">
-					<div class="input">
-						<label for="inputBookTitle">Judul</label>
-						<input id="inputBookTitle" type="text" required>
-					</div>
-					<div class="input">
-						<label for="inputBookAuthor">Penulis</label>
-						<input id="inputBookAuthor" type="text" required>
-					</div>
-					<div class="input">
-						<label for="inputBookYear">Tahun</label>
-						<input id="inputBookYear" type="number" required>
-					</div>
-					<div class="input_inline">
-						<label for="inputBookIsCompleted">Selesai dibaca</label>
-						<input id="inputBookIsComplete" type="checkbox">
-					</div>
-					<button id="bookSubmit" type="submit">
-						Simpan ke rak <span id="choice">Belum selesai dibaca</span>						
-					</button>
-				</form>
-				<button id="cancelAddBook" type="submit">Batal</button>
-			</section>
-		</div>
+  <head>
+    <title>Bookshelf Apps</title>
+    <meta
+      charset="utf-8"
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <header class="head_bar">
+      <h1 class="head_bar_title">Bookshelf Apps</h1>
+    </header>
+    <main>
+      <div class="add_book">
+        <section class="input_section">
+          <h2>Masukkan Buku Baru</h2>
+          <form id="inputBook">
+            <div class="input">
+              <label for="inputBookTitle">Judul</label>
+              <input id="inputBookTitle" type="text" required />
+            </div>
+            <div class="input">
+              <label for="inputBookAuthor">Penulis</label>
+              <input id="inputBookAuthor" type="text" required />
+            </div>
+            <div class="input">
+              <label for="inputBookYear">Tahun</label>
+              <input id="inputBookYear" type="number" required />
+            </div>
+            <div class="input_inline">
+              <label for="inputBookIsCompleted">Selesai dibaca</label>
+              <input id="inputBookIsComplete" type="checkbox" />
+            </div>
+            <button id="bookSubmit" type="submit">
+              Simpan ke rak <span id="choice">Belum selesai dibaca</span>
+            </button>
+          </form>
+          <button id="cancelAddBook" type="submit">Batal</button>
+        </section>
+      </div>
 
-		<div class="edit_book">
-			<section class="edit_section">
-				<h2>Ubah Data Buku</h2>
-				<form id="editBook">
-					<div class="edit">
-						<label for="editBookTitle">Judul</label>
-						<input id="editBookTitle" type="text" required>
-					</div>
-					<div class="edit">
-						<label for="editBookAuthor">Penulis</label>
-						<input id="editBookAuthor" type="text" required>
-					</div>
-					<div class="edit">
-						<label for="editBookYear">Tahun</label>
-						<input id="editBookYear" type="number" required>
-					</div>
-					<div class="edit_inline">
-						<input id="editBookIsComplete" type="checkbox">
-					</div>
-					<button id="editBookSubmit" type="submit">
-						Simpan						
-					</button>
-				</form>
-				<button id="cancelEditBook" type="submit">Batal</button>
-			</section>
-		</div>
+      <div class="edit_book">
+        <section class="edit_section">
+          <h2>Ubah Data Buku</h2>
+          <form id="editBook">
+            <div class="edit">
+              <label for="editBookTitle">Judul</label>
+              <input id="editBookTitle" type="text" required />
+            </div>
+            <div class="edit">
+              <label for="editBookAuthor">Penulis</label>
+              <input id="editBookAuthor" type="text" required />
+            </div>
+            <div class="edit">
+              <label for="editBookYear">Tahun</label>
+              <input id="editBookYear" type="number" required />
+            </div>
+            <div class="edit_inline">
+              <input id="editBookIsComplete" type="checkbox" />
+            </div>
+            <button id="editBookSubmit" type="submit">Simpan</button>
+          </form>
+          <button id="cancelEditBook" type="submit">Batal</button>
+        </section>
+      </div>
 
-		<div class="home">
-			<section class="search_section">
-				<div id="addBook">
-					<button id="addBookButton">Tambah</button>
-				</div>
-				<div id="searchBook">
-					<form id="searchBookForm">
-						<input id="searchBookTitle" type="text" placeholder="Cari buku...">
-						<button id="searchSubmit" type="submit"><i class="fa fa-search"></i></button>
-					</form>
-				</div>
-			</section>
+      <div class="home">
+        <section class="search_section">
+          <div id="addBook">
+            <button id="addBookButton">Tambah</button>
+          </div>
+          <div id="searchBook">
+            <form id="searchBookForm">
+              <input
+                id="searchBookTitle"
+                type="text"
+                placeholder="Cari buku..."
+              />
+              <button id="searchSubmit" type="submit">
+                <i class="fa fa-search"></i>
+              </button>
+            </form>
+          </div>
+        </section>
 
-			<section class="bookshelf">
-				<h2>Belum Selesai Dibaca</h2>
-				<div id="unfinishedBookList" class="book_list"></div>
-			</section>
+        <section class="bookshelf">
+          <h2>Belum Selesai Dibaca</h2>
+          <div id="unfinishedBookList" class="book_list"></div>
+        </section>
 
-			<section class="bookshelf">
-				<h2>Selesai Dibaca</h2>
-				<div id="finishedBookList" class="book_list"></div>
-			</section>
-		</div>
-	</main>
+        <section class="bookshelf">
+          <h2>Selesai Dibaca</h2>
+          <div id="finishedBookList" class="book_list"></div>
+        </section>
+      </div>
+    </main>
 
-	<script src="js/book.js"></script>
-	<script src="js/dom.js"></script>
-	<script src="js/script.js"></script>
-</body>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="js/book.js"></script>
+    <script src="js/dom.js"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>

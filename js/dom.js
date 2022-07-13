@@ -1,29 +1,17 @@
 const BOOK_ITEMID = "itemId";
-const FINISHED_BOOK_LIST = "finishedBookList";
-const UNFINISHED_BOOK_LIST = "unfinishedBookList";
+const FINISHED_BOOK_LIST = "#finishedBookList";
+const UNFINISHED_BOOK_LIST = "#unfinishedBookList";
 
 function makeBook(title, author, year, isCompleted) {
-	const textTitle = document.createElement("h3");
-	textTitle.innerText = title;
+	const textContainer = $("<div></div>").addClass("inner")[0];
+	textContainer.append($("<h3></h3>").text(title)[0],
+	$($("<p></p>").addClass("author")).text("Penulis : " + author)[0], 
+	$($("<p></p>").addClass("year")).text("Tahun : " + year)[0]);
 
-	const textAuthor = document.createElement("p");
-	textAuthor.classList.add("author");
-	textAuthor.innerText = "Penulis : " + author;
-
-	const textYear = document.createElement("p");
-	textYear.classList.add("year");
-	textYear.innerText = "Tahun : " + year;
-
-	const textContainer = document.createElement("div");
-	textContainer.classList.add("inner");
-	textContainer.append(textTitle, textAuthor, textYear);
-
-	const container = document.createElement("article");
-	container.classList.add("book_item");
+	const container = $("<article></article>").addClass("book_item")[0];
 	container.append(textContainer);
 
-	const buttonContainer = document.createElement("div");
-	buttonContainer.classList.add("button-group");
+	const buttonContainer = $("<div></div>").addClass("button-group")[0];
 
 	if (isCompleted) {
 		buttonContainer.append(
@@ -44,10 +32,7 @@ function makeBook(title, author, year, isCompleted) {
 }
 
 function createButton(buttonTypeClass, eventListener) {
-	const button = document.createElement("button");
-	button.classList.add(buttonTypeClass);
-
-	const icon = document.createElement("i");
+	const button = $("<button></button>").addClass(buttonTypeClass)[0];
 	let iconClass;
 	switch (buttonTypeClass) {
 		case "check-button" :
@@ -63,7 +48,7 @@ function createButton(buttonTypeClass, eventListener) {
 			iconClass = "fa-trash-o";
 			break;
 	}
-	icon.classList.add("fa", iconClass);
+	const icon = $("<i></i>").addClass("fa " + iconClass)[0];
 	button.append(icon);
 
 	button.addEventListener("click", function(event) {
@@ -98,166 +83,137 @@ function createUndoButton() {
 }
 
 function addBook() {
-	const textBook = document.getElementById("inputBookTitle").value;
-	const textAuthor = document.getElementById("inputBookAuthor").value;
-	const textYear = document.getElementById("inputBookYear").value;
-	const isCompleted = document.getElementById("inputBookIsComplete").checked;
+	const textBook = $("#inputBookTitle").val();
+	const textAuthor = $("#inputBookAuthor").val();
+	const textYear = $("#inputBookYear").val();
+	const isCompleted = $("#inputBookIsComplete").is(':checked');
 
 	const book = makeBook(textBook, textAuthor, textYear, isCompleted);
 	const bookObject = composeBookObject(textBook, textAuthor, textYear, isCompleted);
-	const form = document.getElementById("inputBook").reset();
 
 	book[BOOK_ITEMID] = bookObject.id;
 	books.push(bookObject);
 
-	if (isCompleted) {
-		const finishedBookList = document.getElementById(FINISHED_BOOK_LIST);
-		finishedBookList.append(book);
-	} else {
-		const unfinishedBookList = document.getElementById(UNFINISHED_BOOK_LIST);
-		unfinishedBookList.append(book);
-	}
+	isCompleted ? $(FINISHED_BOOK_LIST).append(book) : $(UNFINISHED_BOOK_LIST).append(book);
 
-	document.getElementsByClassName("home")[0].style.display = "block";
-	document.getElementsByClassName("add_book")[0].style.display = "none";
+	$(".home:eq(0)").css("display", "block");
+	$(".add_book:eq(0)").css("display", "none");
 
 	updateDataToStorage();
 }
 
 function editBook() {
-	const textBook = document.getElementById("editBookTitle").value;
-	const textAuthor = document.getElementById("editBookAuthor").value;
-	const textYear = document.getElementById("editBookYear").value;
-	const isCompleted = document.getElementById("editBookIsComplete").checked;
+	const textBook = $("#editBookTitle").val();
+	const textAuthor = $("#editBookAuthor").val();
+	const textYear = $("#editBookYear").val();
+	const isCompleted = $("#editBookIsComplete").is(':checked');
 
 	const book = makeBook(textBook, textAuthor, textYear, isCompleted);
 	const bookObject = composeEditedBookObject(tempId, textBook, textAuthor, textYear, isCompleted);
-	const form = document.getElementById("editBook");
-	form.reset();
+	$(".edit_book").hide();
 
 	book[BOOK_ITEMID] = bookObject.id;
 	books.splice(tempPosition, 1, bookObject);
 
-	const finishedBookList = document.getElementById(FINISHED_BOOK_LIST);
-	const unfinishedBookList = document.getElementById(UNFINISHED_BOOK_LIST);
-	finishedBookList.innerHTML = "";
-	unfinishedBookList.innerHTML = "";
+	$(FINISHED_BOOK_LIST).html("");
+	$(UNFINISHED_BOOK_LIST).html("");
 
-	document.getElementsByClassName("home")[0].style.display = "block";
-	document.getElementsByClassName("edit_book")[0].style.display = "none";
+	$(".home:eq(0)").css("display", "block");
+	$(".add_book:eq(0)").css("display", "none");
 
 	updateDataToStorage();
 	refreshDataFromBooks();
 }
 
 function searchBookInBookshelf() {
-	const finishedBookList = document.getElementById(FINISHED_BOOK_LIST);
-	const unfinishedBookList = document.getElementById(UNFINISHED_BOOK_LIST);
-	const inputTitle = document.getElementById("searchBookTitle");
-	const search = inputTitle.value.toUpperCase();
-
 	let finished = 0, unfinished = 0;
 
-	const finishedList = finishedBookList.getElementsByClassName("book_item");
-	const unfinishedList = unfinishedBookList.getElementsByClassName("book_item");
-
 	for (book of books) {
-		book.title.toUpperCase().indexOf(search) > -1 ?
-			(book.isCompleted ? finishedList[finished++].style.display = "" : unfinishedList[unfinished++].style.display = "") :
-			(book.isCompleted ? finishedList[finished++].style.display = "none" : unfinishedList[unfinished++].style.display = "none");
+		book.title.toUpperCase().indexOf($("#searchBookTitle").val().toUpperCase()) > -1 ?
+			(book.isCompleted ? $($(FINISHED_BOOK_LIST).children()[finished++]).css("display", "") : $($(UNFINISHED_BOOK_LIST).children()[unfinished++]).css("display", "")) :
+			(book.isCompleted ? $($(FINISHED_BOOK_LIST).children()[finished++]).css("display", "none") : $($(UNFINISHED_BOOK_LIST).children()[unfinished++]).css("display", "none"));
 	}
 }
 
 function addBookToFinished(bookElement) {
-	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+	$(bookElement).attr('class') === "book_item" ? bookElement = $(bookElement).children()[1] : bookElement;
 
-	const finishedBookList = document.getElementById(FINISHED_BOOK_LIST);
-	const bookTitle = bookElement.parentElement.querySelector(".inner > h3").innerText;
-	const bookAuthor = bookElement.parentElement.querySelector(".inner > .author").innerText;
-	const bookYear = bookElement.parentElement.querySelector(".inner > .year").innerText;
+	const bookTitle = $($($($(bookElement)).siblings()[0]).children()[0]).text();
+	const bookAuthor = $($($($(bookElement)).siblings()[0]).children()[1]).text();
+	const bookYear = $($($($(bookElement)).siblings()[0]).children()[2]).text();
 
 	const newBook = makeBook(bookTitle, bookAuthor.slice(10), bookYear.slice(7), true);
 
-	const book = findBook(bookElement.parentElement[BOOK_ITEMID]);
+	const book = findBook($(bookElement).parent()[0][BOOK_ITEMID]);
 	book.isCompleted = true;
 	newBook[BOOK_ITEMID] = book.id;
 
-	finishedBookList.append(newBook);
-	bookElement.parentElement.remove();
+	$(FINISHED_BOOK_LIST).append(newBook);
+	$($(bookElement).parent()[0]).remove();
 
 	updateDataToStorage();
 }
 
 function editBookFromBookshelf(bookElement) {
-	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+	$(bookElement).attr('class') === "book_item" ? bookElement = $(bookElement).children()[1] : bookElement;
 
-	const bookPosition = findBookIndex(bookElement.parentElement[BOOK_ITEMID]);
-	tempId = bookElement.parentElement[BOOK_ITEMID];
+	const bookPosition = findBookIndex($(bookElement).parent()[0][BOOK_ITEMID]);
+	tempId = $(bookElement).parent()[0][BOOK_ITEMID];
 	tempPosition = bookPosition;
 
-	document.getElementById("editBookTitle").value = books[bookPosition].title;
-	document.getElementById("editBookAuthor").value = books[bookPosition].author;
-	document.getElementById("editBookYear").value = books[bookPosition].year;
-	document.getElementById("editBookIsComplete").checked = books[bookPosition].isCompleted;
+	$("#editBookTitle").val(books[bookPosition].title);
+	$("#editBookAuthor").val(books[bookPosition].author);
+	$("#editBookYear").val(books[bookPosition].year);
+	$("#editBookIsComplete").val(books[bookPosition].isCompleted);
 
-	document.getElementsByClassName("home")[0].style.display = "none";
-	document.getElementsByClassName("edit_book")[0].style.display = "block";
+	$($(".home")[0]).css("display", "none");
+	$($(".edit_book")[0]).css("display", "block");
 
-	bookElement.parentElement.remove();
+	$($(bookElement).parent()[0]).remove();
 }
 
 function removeBookFromBookshelf(bookElement) {
-	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+	$(bookElement).attr('class') === "book_item" ? bookElement = $(bookElement).children()[1] : bookElement;
 
-	const bookPosition = findBookIndex(bookElement.parentElement[BOOK_ITEMID]);
+	const bookPosition = findBookIndex($(bookElement).parent()[0][BOOK_ITEMID]);
 	books.splice(bookPosition, 1);
-	bookElement.parentElement.remove();
+	$($(bookElement).parent()[0]).remove();
 	updateDataToStorage();
 }
 
 function undoBookFromFinished(bookElement) {
-	bookElement.className === "book_item" ? bookElement = bookElement.childNodes[1] : bookElement;
+	$(bookElement).attr('class') === "book_item" ? bookElement = $(bookElement).children()[1] : bookElement;
 
-	const unfinishedBookList = document.getElementById(UNFINISHED_BOOK_LIST);
-	const bookTitle = bookElement.parentElement.querySelector(".inner > h3").innerText;
-	const bookAuthor = bookElement.parentElement.querySelector(".inner > .author").innerText;
-	const bookYear = bookElement.parentElement.querySelector(".inner > .year").innerText;
+	const bookTitle = $($($($(bookElement)).siblings()[0]).children()[0]).text();
+	const bookAuthor = $($($($(bookElement)).siblings()[0]).children()[1]).text();
+	const bookYear = $($($($(bookElement)).siblings()[0]).children()[2]).text();
 
 	const newBook = makeBook(bookTitle, bookAuthor.slice(10), bookYear.slice(7), false);
 
-	const book = findBook(bookElement.parentElement[BOOK_ITEMID]);
+	const book = findBook($(bookElement).parent()[0][BOOK_ITEMID]);
 	book.isCompleted = false;
 	newBook[BOOK_ITEMID] = book.id;
 
-	unfinishedBookList.append(newBook);
-	bookElement.parentElement.remove();
+	$(UNFINISHED_BOOK_LIST).append(newBook);
+	$($(bookElement).parent()[0]).remove();
 
 	updateDataToStorage();
 }
 
 function refreshDataFromBooks() {
-	const finishedBookList = document.getElementById(FINISHED_BOOK_LIST);
-	const unfinishedBookList = document.getElementById(UNFINISHED_BOOK_LIST);
-
 	for (book of books) {
 		const newBook = makeBook(book.title, book.author, book.year, book.isCompleted);
 		newBook[BOOK_ITEMID] = book.id;
-
-		if (book.isCompleted) {
-			finishedBookList.append(newBook);
-		} else {
-			unfinishedBookList.append(newBook);
-		}
+		book.isCompleted ? $(FINISHED_BOOK_LIST).append(newBook) : $(UNFINISHED_BOOK_LIST).append(newBook);
 	}
 }
 
 function cancelForm() {
-	document.getElementsByClassName("home")[0].style.display = "block";
+	$($(".home")[0]).css("display", "block");
 	refreshDataFromBooks();
 
-	const finishedBookList = document.getElementById(FINISHED_BOOK_LIST);
-	const unfinishedBookList = document.getElementById(UNFINISHED_BOOK_LIST);
-	finishedBookList.innerHTML = "";
-	unfinishedBookList.innerHTML = "";
+	$(FINISHED_BOOK_LIST).html("");
+	$(UNFINISHED_BOOK_LIST).html("");
+
 	refreshDataFromBooks();
 }
